@@ -116,30 +116,34 @@ const CartPage = ({ orders, onDelete, goBack, clearOrders }) => {
               className={!isEmailValid && email ? "input-error" : ""}
             />
 
-            <div className="delivery-options">
-              <label>
-                <input
-                  type="radio"
-                  name="delivery"
-                  checked={deliveryType === "pickup"}
-                  onChange={() => setDeliveryType("pickup")}
-                />
-                Самовывоз
-              </label>
+        <div className="delivery-options">
+        <label>
+            <input
+            type="radio"
+            name="delivery"
+            value="pickup"
+            checked={deliveryType === "pickup"}
+            onChange={(e) => setDeliveryType(e.target.value)}
+            />
+            <span>Самовывоз</span>
+        </label>
 
-              <label>
-                <input
-                  type="radio"
-                  name="delivery"
-                  checked={deliveryType === "courier"}
-                  onChange={() => setDeliveryType("courier")}
-                />
-                Доставка курьером
-              </label>
-            </div>
+        <label>
+            <input
+            type="radio"
+            name="delivery"
+            value="courier"
+            checked={deliveryType === "courier"}
+            onChange={(e) => setDeliveryType(e.target.value)}
+            />
+            <span>Доставка курьером</span>
+        </label>
+        </div>
 
-            {deliveryType === "courier" && (
-              <textarea placeholder="Адрес доставки" />
+
+
+            {deliveryType === "courier" && ( 
+                <textarea placeholder="Адрес доставки" />
             )}
 
             <div className="order-summary">
