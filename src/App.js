@@ -5,6 +5,13 @@ import Items from "./components/Items";
 import Categories from "./components/Categories";
 import ShowFullItem from "./components/ShowFullItem";
 import CartPage from "./components/CartPage";
+import About from "./components/About";
+
+const AboutPage = () => (
+  <main style={{ minHeight: "400px", padding: "60px 0", textAlign: "center" }}>
+    <h1>О нас</h1>
+  </main>
+);
 
 class App extends React.Component {
   constructor(props) {
@@ -31,7 +38,7 @@ class App extends React.Component {
         },
         {
           id: 3,
-          title: "Белые лиллии",
+          title: "Белые лилии",
           img: "lillies1.jpg",
           desc: "Элегантный букет белых лилий – символ чистоты, изысканности и возвышенной красоты.",
           category: "lilies",
@@ -85,7 +92,7 @@ class App extends React.Component {
         },
         {
           id: 9,
-          title: "Розовые лиллии",
+          title: "Розовые лилии",
           img: "lillies2.jpg",
           desc: "Нежный букет розовых лилий.",
           category: "lilies",
@@ -94,7 +101,7 @@ class App extends React.Component {
         },
         {
           id: 10,
-          title: "Желтые лиллии",
+          title: "Желтые лилии",
           img: "lillies3.png",
           desc: "Букет жёлтых лилий — символ радости.",
           category: "lilies",
@@ -128,27 +135,31 @@ class App extends React.Component {
       pageView: "catalog", 
       cartOpen: false,
     };
-
     this.state.currentItems = this.state.items;
 
     this.addToOrder = this.addToOrder.bind(this);
     this.deleteOrder = this.deleteOrder.bind(this);
+    this.clearOrders = this.clearOrders.bind(this);
     this.chooseCategory = this.chooseCategory.bind(this);
     this.onShowItem = this.onShowItem.bind(this);
     this.goToCart = this.goToCart.bind(this);
     this.goToCatalog = this.goToCatalog.bind(this);
+    this.goToAbout = this.goToAbout.bind(this);
+    this.closeCart = this.closeCart.bind(this);
   }
 
   render() {
     return (
       <div className="wrapper">
         <Header
-            orders={this.state.orders}
-            onDelete={this.deleteOrder}
-            goToCart={this.goToCart}
-            goToCatalog={this.goToCatalog} 
-            cartOpen={this.state.cartOpen}
-            closeCart={this.closeCart}
+          orders={this.state.orders}
+          onDelete={this.deleteOrder}
+          goToCart={this.goToCart}
+          goToCatalog={this.goToCatalog}
+          goToAbout={this.goToAbout}     
+          cartOpen={this.state.cartOpen}
+          closeCart={this.closeCart}
+          pageView={this.state.pageView} 
         />
 
         {this.state.pageView === "catalog" && (
@@ -168,8 +179,11 @@ class App extends React.Component {
             orders={this.state.orders}
             onDelete={this.deleteOrder}
             goBack={this.goToCatalog}
+            clearOrders={this.clearOrders}
           />
         )}
+
+        {this.state.pageView === "about" && <About />}
 
         {this.state.showFullItem && (
           <ShowFullItem
@@ -185,18 +199,40 @@ class App extends React.Component {
   }
 
   addToOrder(item) {
-      this.setState({
+    this.setState({
       orders: [...this.state.orders, item],
       cartOpen: true,
     });
   }
 
+  deleteOrder(id) {
+    const orders = [...this.state.orders];
+    const index = orders.findIndex((el) => el.id === id);
+
+    if (index !== -1) {
+      orders.splice(index, 1);
+      this.setState({ orders });
+    }
+  }
+
+  clearOrders() {
+    this.setState({ orders: [] });
+  }
+
+  closeCart() {
+    this.setState({ cartOpen: false });
+  }
+
   goToCart() {
-    this.setState({ pageView: "cart" });
+    this.setState({ pageView: "cart", cartOpen: false });
   }
 
   goToCatalog() {
     this.setState({ pageView: "catalog" });
+  }
+
+  goToAbout() {
+    this.setState({ pageView: "about" });
   }
 
   onShowItem(item) {
@@ -220,19 +256,6 @@ class App extends React.Component {
         (el) => el.category === category
       ),
       category: category,
-    });
-  }
-
-  deleteOrder(id) {
-    this.setState({
-      orders: this.state.orders.filter((el) => el.id !== id),
-    });
-  }
-
-  // Разрешаем дубли
-  addToOrder(item) {
-    this.setState({
-      orders: [...this.state.orders, item],
     });
   }
 }
