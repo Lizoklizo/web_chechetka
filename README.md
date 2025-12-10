@@ -40,12 +40,11 @@ React-приложение цветочного магазина.
 
 ## Запуск проекта
 
-### Frontend
+### Frontend Backend
 ```bash
 npm install
 npm start
 
-### Backend
 cd backend
 npm install
 node index.js
