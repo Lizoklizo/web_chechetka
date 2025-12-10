@@ -203,6 +203,25 @@ class App extends React.Component {
       orders: [...this.state.orders, item],
       cartOpen: true,
     });
+
+  // отправляем товар в backend
+  fetch("http://localhost:5000/api/items", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title: item.title,
+      price: item.price,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("Sent to backend:", data);
+    })
+    .catch((err) => {
+      console.error("Backend error:", err);
+    });
   }
 
   deleteOrder(id) {

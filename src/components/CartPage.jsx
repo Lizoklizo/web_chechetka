@@ -34,10 +34,34 @@ const CartPage = ({ orders, onDelete, goBack, clearOrders }) => {
 
   // подтвержение заказа
   const confirmOrder = () => {
-    setShowForm(false);
-    setOrderDone(true);
-    clearOrders(); // очистка заказа
+  const orderData = {
+    name,
+    phone,
+    email,
+    deliveryType,
+    items: orders,
+    total: finalSum
   };
+
+  fetch("http://localhost:5000/api/orders", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(orderData)
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log("Order sent:", data);
+      setShowForm(false);
+      setOrderDone(true);
+      clearOrders();
+    })
+    .catch(err => {
+      console.error("Order error:", err);
+    });
+};
+
 
   return (
     <main className="cart-page">
