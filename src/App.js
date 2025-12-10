@@ -127,12 +127,12 @@ class App extends React.Component {
           page: 2,
         },
       ],
-      orders: [],
+      orders: JSON.parse(localStorage.getItem("orders")) || [],
       currentItems: [],
       showFullItem: false,
       fullItem: {},
       category: "all",
-      pageView: "catalog", 
+      pageView: localStorage.getItem("pageView") || "catalog",
       cartOpen: false,
     };
     this.state.currentItems = this.state.items;
@@ -199,10 +199,14 @@ class App extends React.Component {
   }
 
   addToOrder(item) {
+    const newOrders = [...this.state.orders, item];
+
     this.setState({
-      orders: [...this.state.orders, item],
+      orders: newOrders,
       cartOpen: true,
     });
+
+      localStorage.setItem("orders", JSON.stringify(newOrders));
 
   // отправляем товар в backend
   fetch("http://localhost:5000/api/items", {
@@ -236,6 +240,7 @@ class App extends React.Component {
 
   clearOrders() {
     this.setState({ orders: [] });
+    localStorage.removeItem("orders");
   }
 
   closeCart() {
@@ -244,14 +249,17 @@ class App extends React.Component {
 
   goToCart() {
     this.setState({ pageView: "cart", cartOpen: false });
+    localStorage.setItem("pageView", "cart");
   }
 
   goToCatalog() {
     this.setState({ pageView: "catalog" });
+    localStorage.setItem("pageView", "catalog");
   }
 
   goToAbout() {
     this.setState({ pageView: "about" });
+    localStorage.setItem("pageView", "about");
   }
 
   onShowItem(item) {
