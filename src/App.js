@@ -6,6 +6,13 @@ import Categories from "./components/Categories";
 import ShowFullItem from "./components/ShowFullItem";
 import CartPage from "./components/CartPage";
 import About from "./components/About";
+import AdminOrders from "./components/AdminOrders";
+import BouquetConstructor from "./components/BouquetConstructor";
+
+
+
+
+
 
 const AboutPage = () => (
   <main style={{ minHeight: "400px", padding: "60px 0", textAlign: "center" }}>
@@ -134,6 +141,12 @@ class App extends React.Component {
       category: "all",
       pageView: localStorage.getItem("pageView") || "catalog",
       cartOpen: false,
+
+      selectedFlowers: {},
+      selectedGreenery: {},
+      selectedPaper: null,
+      selectedRibbon: null,
+
     };
     this.state.currentItems = this.state.items;
 
@@ -157,6 +170,7 @@ class App extends React.Component {
           goToCart={this.goToCart}
           goToCatalog={this.goToCatalog}
           goToAbout={this.goToAbout}     
+          goToConstructor={this.goToConstructor.bind(this)}
           cartOpen={this.state.cartOpen}
           closeCart={this.closeCart}
           pageView={this.state.pageView} 
@@ -192,6 +206,14 @@ class App extends React.Component {
             item={this.state.fullItem}
           />
         )}
+
+        {this.state.pageView === "admin" && <AdminOrders />}
+
+        {this.state.pageView === "constructor" && (
+          <BouquetConstructor onAddToCart={this.addToOrder} />
+        )}
+
+
 
         <Footer />
       </div>
@@ -285,6 +307,14 @@ class App extends React.Component {
       category: category,
     });
   }
+
+  goToConstructor() {
+    this.setState({ pageView: "constructor", cartOpen: false });
+    localStorage.setItem("pageView", "constructor");
+  }
+
+
+  
 }
 
 export default App;

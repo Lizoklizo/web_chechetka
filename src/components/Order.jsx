@@ -5,7 +5,7 @@ export default function Order({ item, onDelete }) {
   return (
     <div className="item">
       <div className="item-left-side">
-        <img src={"./img/" + item.img} alt="" />
+        <img src={`/img/${item.img}`} alt={item.title} />
         <div className="item-text">
           <h2>{item.title}</h2>
           <p>{item.price}₽</p>

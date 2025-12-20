@@ -9,6 +9,7 @@ export default function Header({
   goToCart,
   goToCatalog,
   goToAbout,
+  goToConstructor,
   pageView,
 }) {
   const [cartOpen, setCartOpen] = useState(false);
@@ -60,6 +61,14 @@ export default function Header({
               onClick={goToCatalog}
             >
               Каталог
+            </li>
+
+              {}
+            <li
+              className={pageView === "constructor" ? "active" : ""}
+              onClick={goToConstructor}
+            >
+              Собрать букет
             </li>
 
             <li

@@ -15,6 +15,10 @@ let orders = [];
 
 const ordersFile = path.join(__dirname, "orders.json");
 
+// загрузка заказов
+if (fs.existsSync(ordersFile)) {
+    orders = JSON.parse(fs.readFileSync(ordersFile, "utf-8"));
+} 
 /* POST - создать */
 app.post("/api/items", (req, res) => {
     const item = {
@@ -67,6 +71,8 @@ app.post("/api/orders", (req, res) => {
         },
         items: req.body.items,
         total: req.body.total,
+        readyDate: req.body.readyDate,
+        readyText: req.body.readyText,
         createdAt: new Date()
 };
 
@@ -79,15 +85,31 @@ res.status(201).json(order);
 });
 
 // заказы переживают перезапуск сервера
-fs.writeFileSync(ordersFile, JSON.stringify(orders, null, 2));
+// fs.writeFileSync(ordersFile, JSON.stringify(orders, null, 2));
 
 /* GET - ПОЛУЧИТЬ ВСЕ ЗАКАЗЫ */
 app.get("/api/orders", (req, res) => {
-    res.json(orders);
+    const formattedOrders = orders.map(order => ({
+        id: order.id,
+        status: order.status,
+        customer: order.customer,
+        items: order.items,
+        total: order.total,
+        readyDate: order.readyDate,
+        readyText: order.readyText,
+        createdAt: new Date(order.createdAt).toLocaleString("ru-RU")
+    }));
+    res.json(formattedOrders);
 });
+
 
 /* SERVER */
 const PORT = process.env.PORT || 5000;
+
+app.get("/", (req, res) => {
+    res.send("Backend is running ");
+});
+
 
 app.listen(PORT, () => {
     console.log(`Backend running on http://localhost:${PORT}`);
