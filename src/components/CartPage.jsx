@@ -19,6 +19,37 @@ const [email, setEmail] = useState("");
 const [card, setCard] = useState(null);
 const [cardText, setCardText] = useState("");
 
+
+// ===== ДАТА ДОСТАВКИ =====
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const now = new Date();
+const currentHour = now.getHours();
+
+// можно ли доставить сегодня
+const canDeliverToday = currentHour < 17;
+
+// выбранная дата доставки
+const [deliveryDate, setDeliveryDate] = useState(
+  canDeliverToday ? today : new Date(today.getTime() + 86400000)
+);
+
+// формат для отображения
+const formattedDate = deliveryDate.toLocaleDateString("ru-RU", {
+  day: "numeric",
+  month: "long"
+});
+
+const isToday =
+  deliveryDate.toDateString() === today.toDateString();
+
+const deliveryText = isToday
+  ? "Доставка сегодня"
+  : "Доставка в выбранную дату";
+
+
+
 const cards = [
     { id: 1, title: "Открытка 1", price: 100, img: wel1 },
     { id: 2, title: "Открытка 2", price: 100, img: wel2 },
@@ -56,25 +87,6 @@ const canSubmit =
     phone.trim() !== "" &&
     isEmailValid;
 
-// Расчёт даты готовности заказа
-const now = new Date();
-const currentHour = now.getHours();
-
-const deliveryDate = new Date();
-let deliveryText = "";
-
-if (currentHour < 17) {
-    deliveryText = "Заказ будет готов сегодня";
-} else {
-    deliveryDate.setDate(deliveryDate.getDate() + 1);
-    deliveryText = "Заказ будет готов завтра";
-}
-
-const formattedDate = deliveryDate.toLocaleDateString("ru-RU", {
-    day: "numeric",
-    month: "long"
-});
-
 
 
 
@@ -99,7 +111,7 @@ const confirmOrder = () => {
             }
             : null,
         total: finalSum,
-        readyDate: formattedDate,
+        readyDate: deliveryDate.toISOString(),
         readyText: deliveryText
     };
 
@@ -309,6 +321,31 @@ return (
                 {deliveryType === "courier" && (
                     <textarea placeholder="Адрес доставки" />
                 )}
+
+                <div className="delivery-calendar">
+                    <label>Дата доставки</label>
+
+                    <input
+                        type="date"
+                        value={deliveryDate.toISOString().split("T")[0]}
+                        min={
+                        canDeliverToday
+                            ? today.toISOString().split("T")[0]
+                            : new Date(today.getTime() + 86400000).toISOString().split("T")[0]
+                        }
+                        onChange={(e) => {
+                        const selected = new Date(e.target.value);
+                        setDeliveryDate(selected);
+                        }}
+                    />
+
+                    {!canDeliverToday && (
+                        <span className="delivery-hint">
+                        Заказы на сегодня принимаются до 17:00 — доступна доставка с завтрашнего дня
+                        </span>
+                    )}
+                </div>
+
 
                 <div className="order-summary">
                     <p>
